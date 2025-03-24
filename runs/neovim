@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Install required packages
+sudo pacman -Syu neovim
+
+

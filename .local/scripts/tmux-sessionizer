@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+selected=$(find ~/ ~/personal ~/.config  -maxdepth 1 -mindepth 1 -type d | fzf)
+
+if [[ -z "$selected" ]]; then
+    exit 0
+fi 
+
+selected_name=$(basename "$selected" | tr ":,." "____")
+
+switch_to() {
+    if [[ -z "$TMUX" ]]; then
+        tmux attach-session -t "$selected_name" 
+    else
+        tmux switch-client -t "$selected_name"
+    fi
+}
+
+if tmux has-session -t="$selected_name" 2> /dev/null; then
+    switch_to
+else
+    # Create a new session
+    tmux new-session -ds "$selected_name" -c "$selected"
+
+    # Only create the "scratch" window if it doesn't exist
+    if ! tmux list-windows -t "$selected_name" | grep -q "scratch"; then
+        tmux new-window -t "$selected_name" -dn scratch
+    fi
+
+    switch_to
+fi
+
