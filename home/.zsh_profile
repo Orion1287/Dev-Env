@@ -1,0 +1,22 @@
+# Load .zshrc if running interactively
+if [[ -f "$HOME/.zshrc" ]]; then
+    source "$HOME/.zshrc"
+fi
+
+# Set default editor
+export EDITOR="nvim"
+
+# Set GOPATH
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+
+# Add custom directories to PATH
+addToPathFront() {
+    export PATH="$1:$PATH"
+}
+
+addToPathFront "$HOME/.zig"
+addToPathFront "$HOME/.local/bin"
+addToPathFront "$HOME/.deno/bin"
+addToPathFront "$HOME/go/bin"
+

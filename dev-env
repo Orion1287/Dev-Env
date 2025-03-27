@@ -58,3 +58,5 @@ copy_file() {
 copy_dir .config $XDG_CONFIG_HOME
 copy_dir .local $HOME/.local
 copy_file .specialconfig $HOME
+copy_file ./home/.zshrc $HOME
+copy_file ./home/.zsh_profile $HOME

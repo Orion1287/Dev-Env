@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 # Install required packages
-sudo pacman -Syu neovim
+sudo pacman -Syu neovim ghostty tmux feh
 
 

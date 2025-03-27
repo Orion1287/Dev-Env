@@ -1,0 +1,88 @@
+#!/bin/bash
+
+echo "Installing Zsh and dependencies..."
+
+# Install Zsh and plugins
+sudo pacman -Sy --noconfirm zsh git fzf
+
+# Install Zsh plugins manually
+ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+mkdir -p "$ZSH_CUSTOM/plugins"
+
+if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]]; then
+    echo "Installing zsh-autosuggestions..."
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+fi
+
+if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]]; then
+    echo "Installing zsh-syntax-highlighting..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+fi
+
+# Set Zsh as the default shell
+ZSH_PATH=$(which zsh)
+echo "Changing default shell to: $ZSH_PATH"
+sudo chsh -s "$ZSH_PATH" "$USER"
+
+# Install Oh My Zsh if not installed
+if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+    echo "Installing Oh My Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+else
+    echo "Oh My Zsh is already installed."
+fi
+
+# Copy updated .zshrc
+echo "Configuring .zshrc..."
+cat << 'EOF' > "$HOME/.zshrc"
+export ZSH="$HOME/.oh-my-zsh"
+
+# Set theme
+ZSH_THEME="robbyrussell"
+
+# Plugins
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+# Ensure Zsh custom path is set
+export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+
+# Load Oh My Zsh
+source $ZSH/oh-my-zsh.sh
+
+# FZF keybindings (only if installed)
+if [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+    source /usr/share/doc/fzf/examples/completion.zsh
+fi
+
+# Load personal environment files if they exist
+PERSONAL="$HOME/.config/personal"
+if [[ -d "$PERSONAL" ]]; then
+    for file in $(find -L "$PERSONAL" -type f); do
+        source "$file"
+    done
+fi
+
+# Add custom paths
+export PATH="$HOME/.local/bin:$HOME/.deno/bin:$HOME/go/bin:$PATH"
+
+# Custom function to print a single-line file
+cat1Line() {
+    tr -d "\n" < "$1"
+}
+
+# Alias for Neovim
+alias vim="nvim"
+
+# Ensure the shell is interactive before running fzf key bindings
+if [[ $- == *i* ]]; then
+    bindkey -s ^f "tmux-sessionizer\n"
+fi
+EOF
+
+# Apply changes
+echo "Sourcing .zshrc..."
+source "$HOME/.zshrc"
+
+echo "Zsh installation and setup complete. Restart your terminal or type 'zsh' to start using it."
+

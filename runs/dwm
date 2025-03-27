@@ -4,7 +4,7 @@
 sudo pacman -Sy --noconfirm base-devel xorg xorg-xinit libx11 libxft libxinerama
 
 DWM_DIR="$HOME/dwm"
-REPO_URL="git@github.com:Orion1287/dwm.git"  # Use SSH instead of HTTPS
+REPO_URL="https://github.com/Orion1287/dwm.git"  # Use SSH instead of HTTPS
 
 # Remove old directory if invalid
 if [ -d "$DWM_DIR" ] && [ ! -d "$DWM_DIR/dwm" ]; then
@@ -43,5 +43,7 @@ fi
 # Build and install dwm
 echo "Building and installing dwm..."
 cd "$DWM_DIR/dwm" || exit 1
+sudo make clean install
+cd "$DWM_DIR/slstatus" || exit 1 
 sudo make clean install
 
