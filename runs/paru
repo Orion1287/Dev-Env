@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo "Installing paru (AUR helper)..."
+
+# Install dependencies
+sudo pacman -Sy --needed --noconfirm git base-devel
+
+# Clone and build paru from AUR
+if [[ ! -d "$HOME/paru" ]]; then
+    git clone https://aur.archlinux.org/paru.git "$HOME/paru"
+fi
+
+cd "$HOME/paru" || exit
+makepkg -si --noconfirm
+
+# Clean up
+cd ..
+rm -rf "$HOME/paru"
+
+echo "paru installation complete! 🎉"
+
