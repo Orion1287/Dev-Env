@@ -1,0 +1,3 @@
+#!/bin/bash
+
+paru -Syu --noconfirm librewolf-bin ttf-jetbrains-mono-nerd 
