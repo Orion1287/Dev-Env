@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo "Installing yay (AUR helper)..."
+
+# Install dependencies
+sudo pacman -Sy --needed --noconfirm git base-devel
+
+# Clone and build yay from AUR
+if [[ ! -d "$HOME/yay" ]]; then
+    git clone https://aur.archlinux.org/yay.git "$HOME/yay"
+fi
+
+cd "$HOME/yay" || exit
+makepkg -si --noconfirm
+
+# Clean up
+cd ..
+rm -rf "$HOME/yay"
+
+echo "yay installation complete! 🎉"
+
