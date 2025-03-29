@@ -15,7 +15,7 @@ while [[ $# > 0 ]]; do
     fi
     shift
 done
-
+#log file
 log() {
     if [[ $dry == "1" ]]; then
         echo "[DRY_RUN]: $@"
