@@ -23,7 +23,7 @@ log() {
         echo "$@"
     fi
 }
-
+#exec
 execute() {
     log "execute: $@"
     if [[ $dry == "1" ]]; then
